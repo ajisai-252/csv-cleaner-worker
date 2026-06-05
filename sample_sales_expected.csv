@@ -1,0 +1,13 @@
+order_id,customer_name,order_date,product_name,quantity,amount,status,payment_method
+1001,田中 太郎,2026-05-01,ノートPC,1,120000,paid,credit
+1002,佐藤 花子,2026-05-02,マウス,2,3500,paid,cash
+1003,鈴木 一郎,2026-05-03,キーボード,1,8900,pending,bank
+1004,山田 美咲,2026-05-04,モニター,1,24800,paid,credit
+1005,高橋 健,2026-05-05,USBケーブル,3,0,coupon
+1006,伊藤 真理,2026-05-06,Webカメラ,1,7200,paid,credit
+1007,渡辺 翔太,2026-05-07,ヘッドセット,1,12300,cancelled,credit
+1008,中村 優子,,プリンター,1,18000,paid,bank
+1009,小林 大輔,,外付けSSD,1,,pending,bank
+1010,加藤 愛,2026-05-10,タブレット,1,45000,paid,credit
+1011,吉田 誠,2026-05-11,ノートPC,1,-1200,refund,credit
+1012,山本 葵,2026-05-12,マウスパッド,2,1200,paid,cash
