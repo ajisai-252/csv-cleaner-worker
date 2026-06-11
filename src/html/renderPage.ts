@@ -4,7 +4,7 @@ export function renderPage(): string {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CSV Cleaner Worker</title>
+    <title>CSV整形ワークベンチ</title>
     <style>
       :root { color-scheme: light; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
       * { box-sizing: border-box; }
@@ -42,9 +42,9 @@ export function renderPage(): string {
   <body>
     <main>
       <section class="hero">
-        <span class="badge">Cloudflare Workers + TypeScript</span>
-        <h1>CSV整形作業を、ブラウザからすぐ試せるWebツールへ。</h1>
-        <p>csv-cleaner-worker は、CSVの空白トリム・日付形式統一・金額表記の正規化などを試せるポートフォリオ向けMVPです。ファイルは永続保存せず、選択したCSVをその場で加工します。</p>
+        <span class="badge">CSV Cleaner / Cloudflare Workers</span>
+        <h1>CSV整形ワークベンチ</h1>
+        <p>CSVの空白・日付・金額表記を、ブラウザ上で手早く整形できます。<br />選択したCSVはサーバーに保存せず、その場で加工結果と警告を確認できます。</p>
       </section>
 
       <section class="panel" aria-labelledby="upload-title">
