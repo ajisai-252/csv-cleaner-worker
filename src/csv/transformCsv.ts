@@ -67,7 +67,7 @@ function buildDate(year: string, month: string, day: string): string | undefined
     return undefined;
   }
 
-  return `${year}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+  return `${year}/${String(mm).padStart(2, '0')}/${String(dd).padStart(2, '0')}`;
 }
 
 function normalizeAmount(value: string): string | undefined {
