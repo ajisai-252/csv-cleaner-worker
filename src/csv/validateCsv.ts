@@ -68,9 +68,17 @@ function looksLikeInvalidDate(value: string): boolean {
 }
 
 function looksLikeInvalidAmount(value: string): boolean {
-  if (!/[¥$,]/.test(value)) {
+  if (!looksLikeAmountCandidate(value)) {
     return false;
   }
 
-  return !/^-?[¥$]?\s?\d{1,3}(,\d{3})*(\.\d+)?$/.test(value.trim());
+  return !/^-?\s*[¥$]?\s*(?:(?:\d{1,3}(?:,\d{3})+)|\d+)(?:\.\d+)?$/.test(value.trim());
+}
+
+function looksLikeAmountCandidate(value: string): boolean {
+  if (/[¥$]/.test(value)) {
+    return true;
+  }
+
+  return value.includes(',') && /^-?\s*\d[\d,\s.]*/.test(value.trim());
 }

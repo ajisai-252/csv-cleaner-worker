@@ -1,6 +1,10 @@
 import { buildCsv } from './csv/buildCsv';
 import { parseCsv } from './csv/parseCsv';
-import { transformCsv } from './csv/transformCsv';
+import {
+  isTransformCsvOptions,
+  transformCsv,
+  type TransformCsvOptions,
+} from './csv/transformCsv';
 import { validateCsv } from './csv/validateCsv';
 import { renderPage } from './html/renderPage';
 
@@ -45,14 +49,19 @@ async function cleanCsv(request: Request): Promise<Response> {
     return jsonError(CSV_TOO_LARGE_ERROR, 413);
   }
 
-  const csv = await request.text();
+  const body = await readCleanCsvRequest(request);
+  if (!body) {
+    return jsonError('Invalid request body.', 400);
+  }
+
+  const { csv, options } = body;
   if (isCsvTextTooLarge(csv)) {
     return jsonError(CSV_TOO_LARGE_ERROR, 413);
   }
 
   const parsed = parseCsv(csv);
   const validation = validateCsv(parsed.data);
-  const transformed = transformCsv(parsed.data);
+  const transformed = transformCsv(parsed.data, options);
   const output = buildCsv(transformed.data);
 
   return Response.json({
@@ -63,6 +72,36 @@ async function cleanCsv(request: Request): Promise<Response> {
       ...transformed.warnings,
     ],
   });
+}
+
+interface CleanCsvRequestBody {
+  csv: string;
+  options: TransformCsvOptions;
+}
+
+async function readCleanCsvRequest(request: Request): Promise<CleanCsvRequestBody | undefined> {
+  let body: unknown;
+
+  try {
+    body = await request.json();
+  } catch (_error) {
+    return undefined;
+  }
+
+  if (!body || typeof body !== 'object') {
+    return undefined;
+  }
+
+  const payload = body as Record<string, unknown>;
+  if (typeof payload.csv !== 'string') {
+    return undefined;
+  }
+
+  if (!isTransformCsvOptions(payload.options)) {
+    return undefined;
+  }
+
+  return { csv: payload.csv, options: payload.options };
 }
 
 function isContentLengthTooLarge(contentLength: string | null): boolean {
