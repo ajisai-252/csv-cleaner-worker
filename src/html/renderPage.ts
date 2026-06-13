@@ -21,7 +21,11 @@ export function renderPage(): string {
       .panel { margin-top: 24px; background: white; border: 1px solid #e5eaf3; border-radius: 22px; padding: 28px; box-shadow: 0 12px 40px rgba(23, 32, 51, 0.08); }
       .upload { border: 2px dashed #b8c4d9; border-radius: 18px; padding: 28px; background: #fbfcff; }
       .upload-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 18px; }
-      input[type="file"] { width: min(100%, 440px); padding: 10px; border: 1px solid #d7deea; border-radius: 12px; background: white; }
+      input[type="file"], select { width: min(100%, 440px); padding: 10px; border: 1px solid #d7deea; border-radius: 12px; background: white; }
+      .settings { margin-top: 22px; padding-top: 20px; border-top: 1px solid #e5eaf3; }
+      .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 12px; }
+      .field { display: flex; flex-direction: column; gap: 8px; }
+      .field label { font-weight: 700; color: #243047; }
       .primary-button { background: #2557d6; color: white; }
       .secondary-button { background: #e8eefb; color: #163b91; }
       .result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 22px; }
@@ -57,6 +61,26 @@ export function renderPage(): string {
             <button id="clean-button" class="primary-button" type="button" disabled>CSVを加工する</button>
             <button id="download-button" class="secondary-button" type="button" disabled>加工後CSVをダウンロード</button>
           </div>
+          <section class="settings" aria-labelledby="settings-title">
+            <h3 id="settings-title">加工設定</h3>
+            <div class="settings-grid">
+              <div class="field">
+                <label for="date-format">日付形式</label>
+                <select id="date-format">
+                  <option value="yyyy/MM/dd" selected>yyyy/MM/dd</option>
+                  <option value="yyyy-MM-dd">yyyy-MM-dd</option>
+                  <option value="yyyyMMdd">yyyyMMdd</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="amount-format">金額形式</label>
+                <select id="amount-format">
+                  <option value="plain" selected>カンマなし（例: 12000）</option>
+                  <option value="comma">カンマあり（例: 12,000）</option>
+                </select>
+              </div>
+            </div>
+          </section>
           <div id="status" class="status" role="status" aria-live="polite"></div>
         </div>
 
@@ -88,6 +112,8 @@ export function renderPage(): string {
       const fileInput = document.getElementById('csv-file');
       const cleanButton = document.getElementById('clean-button');
       const downloadButton = document.getElementById('download-button');
+      const dateFormatSelect = document.getElementById('date-format');
+      const amountFormatSelect = document.getElementById('amount-format');
       const inputPreview = document.getElementById('input-preview');
       const outputPreview = document.getElementById('output-preview');
       const warningsOutput = document.getElementById('warnings-output');
@@ -136,8 +162,14 @@ export function renderPage(): string {
         try {
           const response = await fetch('/api/clean', {
             method: 'POST',
-            headers: { 'content-type': 'text/plain; charset=utf-8' },
-            body: selectedCsv,
+            headers: { 'content-type': 'application/json; charset=utf-8' },
+            body: JSON.stringify({
+              csv: selectedCsv,
+              options: {
+                dateFormat: dateFormatSelect.value,
+                amountFormat: amountFormatSelect.value,
+              },
+            }),
           });
           const result = await response.json();
 
